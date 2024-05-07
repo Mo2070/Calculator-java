@@ -20,22 +20,33 @@ implements EventHandler<ActionEvent>
 
 	{
 
-	private final static VALUE defaultvalue = new VALUE(0);
+	private final static Value Defaultvalue = new Value(0);
 	
-	private add addition = new add(defaultvalue, defaultvalue);
+	private Add Addition = new Add(Defaultvalue, Defaultvalue);
 
-	private Label ERROR = new Label("");
+	private Label Error = new Label("");
 	
-	private TextField i = new TextField("");
+	private TextField Input = new TextField("");
 	
-	private Button a = new Button("+");
+	private Button addButton = new Button("+");
 	
-	private Label reSult = new Label(addition.computeAnEquationRepresentingTheExpressionAndItsValue());
+	private Button resetButton = new Button("Reset");
+	
+	private Label Result = new Label(Addition.computeEquation());
+	
+	private void resetCalculator() {
+		Addition = new Add(Defaultvalue, Defaultvalue);
+		Result.setText(Addition.computeEquation());
+		Input.setText("");
+		Error.setText("");
+				
+	}
+	
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Professioral Calculator");
-		ERROR.setTextFill(Color.web("#AA0000"));
+		Error.setTextFill(Color.web("#AA0000"));
 
 //		Tried a different layout first, but this looked ugly.
 //		BorderPane borderPane = new BorderPane();
@@ -46,29 +57,24 @@ implements EventHandler<ActionEvent>
 		
 		VBox layout = new VBox(10);
 
-		layout.getChildren().add(ERROR);
-		
-		layout.getChildren().add(i);
-		
-		layout.getChildren().add(a);
-		
-		layout.getChildren().add(reSult);
+		layout.getChildren().addAll(Error, Input, addButton, Result, resetButton);
 		
 		layout.setPadding(new Insets(20, 80, 20, 80));
 		Scene scene = new Scene(layout);
 		
 		stage.setScene(scene);
 		stage.show();
-		a.setOnAction(this);
+		addButton.setOnAction(this);
+		resetButton.setOnAction(e -> resetCalculator());
 	}
 
 	@Override
 	public void handle(ActionEvent event) {
 		try {
-			int newValue = Integer.parseInt(i.getText()); int oldResult = addition.evaluatetheexpressiontoanintegervalue();
-			addition = new add(new VALUE(oldResult), new VALUE(newValue)); reSult.setText(addition.computeAnEquationRepresentingTheExpressionAndItsValue());
-			i.setText(""); ERROR.setText(""); i.requestFocus();
-		}                    catch (NumberFormatException e) { ERROR.setText("\"" + i.getText() + "\" is not a valid integer"); }
+			int newValue = Integer.parseInt(Input.getText()); int oldResult = Addition.evaluate();
+			Addition = new Add(new Value(oldResult), new Value(newValue)); Result.setText(Addition.computeEquation());
+			Input.setText(""); Error.setText(""); Input.requestFocus();
+		}                    catch (NumberFormatException e) { Error.setText("\"" + Input.getText() + "\" is not a valid integer"); }
 	}
 	
 	public static void main(String[] args) { launch(args); }

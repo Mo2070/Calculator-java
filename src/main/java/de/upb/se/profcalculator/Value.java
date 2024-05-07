@@ -1,10 +1,10 @@
 package de.upb.se.profcalculator;
 
-public class VALUE {
+public class Value {
 
 	Integer value;
 
-	public VALUE(int value)
+	public Value(int value)
 	{
 this.value = value;
 }
