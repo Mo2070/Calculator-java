@@ -20,9 +20,9 @@ implements EventHandler<ActionEvent>
 
 	{
 
-	private final static Value Defaultvalue = new Value(0);
+	private final static Value DEFAULTVALUE = new Value(0);
 	
-	private Add Addition = new Add(Defaultvalue, Defaultvalue);
+	private Add Addition = new Add(DEFAULTVALUE, DEFAULTVALUE);
 
 	private Label Error = new Label("");
 	
@@ -34,8 +34,8 @@ implements EventHandler<ActionEvent>
 	
 	private Label Result = new Label(Addition.computeEquation());
 	
-	private void resetCalculator() {
-		Addition = new Add(Defaultvalue, Defaultvalue);
+	private void resetCalculator() {  
+		Addition = new Add(DEFAULTVALUE, DEFAULTVALUE);
 		Result.setText(Addition.computeEquation());
 		Input.setText("");
 		Error.setText("");
