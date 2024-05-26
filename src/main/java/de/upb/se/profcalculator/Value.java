@@ -18,16 +18,17 @@ public class Value {
         int intValue = Integer.parseInt(str);
         return new Value(intValue);
     }
-
+    /*
     @Override
     public String toString() {
         return value.toString();
     }
-
+*/
     public int getValue() {
         return value.intValue();
     }
-
+}
+    /*
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -39,5 +40,6 @@ public class Value {
     @Override
     public int hashCode() {
         return value.hashCode();
-    }
+    }
 }
+    */
