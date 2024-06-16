@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfCalculator extends Application implements EventHandler<ActionEvent> {
+public class ProfCalculator 
+extends Application 
+implements EventHandler<ActionEvent> {
 
     private Value currentValue;
     private StringBuilder currentEquation = new StringBuilder();
@@ -27,7 +29,7 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
     private Label resultLabel = new Label("0");
 
     private void resetCalculator() {
-        currentValue = new Value();  // Use the default constructor to initialize with 0
+    	currentValue = new Value();  // Use the default constructor to initialize with 0
         currentEquation.setLength(0);
         resultMemory.clear();  // Clear the result memory
         resultLabel.setText("0");
@@ -74,14 +76,22 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
                 currentValue = newValue;
                 currentEquation.append(newValue.getValue());
             } else {
-                Operation op = OperationFactory.createOperation(operation, currentValue, newValue);
-                if (op != null) {
-                    currentEquation.append(op.represent());
-                    currentValue = new Value(op.evaluate());
-                    currentEquation.append(" = ").append(currentValue.getValue());
-                    resultLabel.setText(currentEquation.toString());
-                    currentEquation = new StringBuilder().append(currentValue.getValue());
-                    updateResultMemory(currentValue);  // Update the result memory
+                switch (operation) {
+                    case "add":
+                        updateEquationAndValue(newValue, " + ", currentValue.getValue() + newValue.getValue());
+                        break;
+                    case "subtract":
+                        updateEquationAndValue(newValue, " - ", currentValue.getValue() - newValue.getValue());
+                        break;
+                    case "multiply":
+                        updateEquationAndValue(newValue, " * ", currentValue.getValue() * newValue.getValue());
+                        break;
+                    case "divide":
+                        if (newValue.getValue() == 0) {
+                            throw new ArithmeticException("Division by zero");
+                        }
+                        updateEquationAndValue(newValue, " / ", currentValue.getValue() / newValue.getValue());
+                        break;
                 }
             }
             inputField.setText("");
@@ -94,12 +104,21 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         }
     }
 
+    private void updateEquationAndValue(Value newOperand, String operator, int newResult) {
+        currentEquation.append(operator).append(newOperand.getValue());
+        currentValue = new Value(newResult);
+        currentEquation.append(" = ").append(currentValue.getValue());
+        resultLabel.setText(currentEquation.toString());
+        currentEquation = new StringBuilder().append(currentValue.getValue());
+        updateResultMemory(currentValue);  // Update the result memory
+    }
+    
     private void updateResultMemory(Value result) {
         int lastIndex = resultMemory.lastIndexOf(result);
         if (lastIndex == -1) {
             memoryLabel.setText("New result");
         } else {
-            memoryLabel.setText("Result occurred " + (resultMemory.size() - lastIndex) + " steps ago");
+            memoryLabel.setText("Result occurred" + (resultMemory.size() - lastIndex) + " steps ago");
         }
         resultMemory.add(result);  // Add the new result to the memory
     }
@@ -108,8 +127,9 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         launch(args);
     }
 
-    @Override
-    public void handle(ActionEvent event) {
-        // Handle method implementation if needed
-    }
+	@Override
+	public void handle(ActionEvent event) {
+	
+		
+	}
 }
