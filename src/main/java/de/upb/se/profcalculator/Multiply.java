@@ -1,21 +1,24 @@
 package de.upb.se.profcalculator;
 
-public class Multiply {
-    public Value leftValue, rightValue;
-    
+public class Multiply implements Operation {
+    private Value leftValue, rightValue;
+
     public Multiply(Value leftOperand, Value rightOperand) {
         this.leftValue = leftOperand;
         this.rightValue = rightOperand;
     }
 
+    @Override
     public String represent() {
         return leftValue.toString() + " * " + rightValue.toString();
     }
 
+    @Override
     public int evaluate() {
         return leftValue.getValue() * rightValue.getValue();
     }
-    
+
+    @Override
     public String computeEquation() {
         return represent() + " = " + evaluate();
     }
