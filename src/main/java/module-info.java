@@ -1,8 +1,9 @@
 module de.upb.se.profcalculator {
-    requires transitive javafx.controls;
+    requires javafx.controls;
+    requires javafx.graphics;
     requires javafx.fxml;
 
-
-    opens de.upb.se.profcalculator to javafx.fxml;
-    exports de.upb.se.profcalculator;
+    exports de.upb.se.profcalculator.main;
+    exports de.upb.se.profcalculator.operations;
+    exports de.upb.se.profcalculator.interfaces;
 }

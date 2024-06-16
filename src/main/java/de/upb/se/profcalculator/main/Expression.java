@@ -1,4 +1,4 @@
-package de.upb.se.profcalculator;
+package de.upb.se.profcalculator.main;
 
 public abstract class Expression {
     protected Value leftValue, rightValue;
@@ -9,10 +9,9 @@ public abstract class Expression {
     }
 
     public abstract int evaluate();
+    public abstract String computeEquation();  
 
-    public abstract String represent();
-
-    public String computeEquation() {
-        return represent() + " = " + evaluate();
+    public String represent(String operator) {
+        return leftValue.toString() + " " + operator + " " + rightValue.toString();
     }
 }

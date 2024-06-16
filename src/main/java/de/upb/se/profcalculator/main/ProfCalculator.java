@@ -1,4 +1,4 @@
-package de.upb.se.profcalculator;
+package de.upb.se.profcalculator.main;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -11,6 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import de.upb.se.profcalculator.operations.Add;
+import de.upb.se.profcalculator.operations.Subtract;
+import de.upb.se.profcalculator.operations.Multiply;
+import de.upb.se.profcalculator.operations.Divide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,16 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
     private Label memoryLabel = new Label("");
     private TextField inputField = new TextField("");
     private Label resultLabel = new Label("0");
+
+    private void resetCalculator() {
+        currentValue = new Value();  // Use the default constructor to initialize with 0
+        currentEquation.setLength(0);
+        resultMemory.clear();  // Clear the result memory
+        resultLabel.setText("0");
+        inputField.setText("");
+        errorLabel.setText("");
+        memoryLabel.setText("");
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -47,24 +61,11 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
 
     private Button createButton(String text, String operation) {
         Button button = new Button(text);
-        button.setOnAction(this);
-        button.setUserData(operation);
+        button.setOnAction(event -> handleOperation(operation));
         return button;
     }
 
-    private void resetCalculator() {
-        currentValue = new Value();
-        currentEquation.setLength(0);
-        resultMemory.clear();
-        resultLabel.setText("0");
-        inputField.setText("");
-        errorLabel.setText("");
-        memoryLabel.setText("");
-    }
-
-    @Override
-    public void handle(ActionEvent event) {
-        String operation = (String) ((Button) event.getSource()).getUserData();
+    private void handleOperation(String operation) {
         if ("reset".equals(operation)) {
             resetCalculator();
             return;
@@ -72,31 +73,28 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
 
         try {
             Value newValue = Value.parseValue(inputField.getText());
-            if (currentValue == null || currentEquation.length() == 0) {
+            if (currentValue == null || currentEquation.length() == 0) {  // If it's the first input
                 currentValue = newValue;
                 currentEquation.append(newValue.getValue());
             } else {
-                Expression expression;
+                Expression expr = null;
                 switch (operation) {
                     case "add":
-                        expression = new Add(currentValue, newValue);
+                        expr = new Add(currentValue, newValue);
                         break;
                     case "subtract":
-                        expression = new Subtract(currentValue, newValue);
+                        expr = new Subtract(currentValue, newValue);
                         break;
                     case "multiply":
-                        expression = new Multiply(currentValue, newValue);
+                        expr = new Multiply(currentValue, newValue);
                         break;
                     case "divide":
-                        expression = new Divide(currentValue, newValue);
+                        expr = new Divide(currentValue, newValue);
                         break;
-                    default:
-                        throw new IllegalArgumentException("Unknown operation: " + operation);
                 }
-                currentValue = new Value(expression.evaluate());
-                currentEquation = new StringBuilder().append(currentValue.getValue());
-                resultLabel.setText(expression.computeEquation());
-                updateResultMemory(currentValue);
+                if (expr != null) {
+                    updateEquationAndValue(expr);
+                }
             }
             inputField.setText("");
             errorLabel.setText("");
@@ -108,6 +106,14 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         }
     }
 
+    private void updateEquationAndValue(Expression expr) {
+        currentEquation.append(" = ").append(expr.evaluate());
+        currentValue = new Value(expr.evaluate());
+        resultLabel.setText(expr.computeEquation());
+        currentEquation = new StringBuilder().append(currentValue.getValue());
+        updateResultMemory(currentValue);  // Update the result memory
+    }
+
     private void updateResultMemory(Value result) {
         int lastIndex = resultMemory.lastIndexOf(result);
         if (lastIndex == -1) {
@@ -115,10 +121,14 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         } else {
             memoryLabel.setText("Result occurred " + (resultMemory.size() - lastIndex) + " steps ago");
         }
-        resultMemory.add(result);
+        resultMemory.add(result);  // Add the new result to the memory
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void handle(ActionEvent event) {
     }
 }
