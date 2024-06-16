@@ -1,22 +1,18 @@
 package de.upb.se.profcalculator;
 
-public class Multiply {
-    public Value leftValue, rightValue;
-    
-    public Multiply(Value leftOperand, Value rightOperand) {
-        this.leftValue = leftOperand;
-        this.rightValue = rightOperand;
+public class Multiply extends Expression {
+
+    public Multiply(Value leftValue, Value rightValue) {
+        super(leftValue, rightValue);
     }
 
-    public String represent() {
-        return leftValue.toString() + " * " + rightValue.toString();
-    }
-
+    @Override
     public int evaluate() {
         return leftValue.getValue() * rightValue.getValue();
     }
-    
-    public String computeEquation() {
-        return represent() + " = " + evaluate();
+
+    @Override
+    public String represent() {
+        return leftValue.getValue() + " * " + rightValue.getValue();
     }
 }

@@ -1,23 +1,18 @@
 package de.upb.se.profcalculator;
 
-public class Add {
-	public Value leftValue, rightValue;
-	
-	public Add(Value leftOperand, Value rightOperand) {
-		this.leftValue = leftOperand;
-		this.rightValue = rightOperand;
-	}
-	
+public class Add extends Expression {
 
-	public String represent() {
-		return leftValue.toString() + " + " + rightValue.toString();
-	}
+    public Add(Value leftValue, Value rightValue) {
+        super(leftValue, rightValue);
+    }
 
-	public int evaluate() {
-		return leftValue.getValue() + rightValue.getValue();
-	}
-	
-	public String computeEquation() {
-		return represent() + " = " + evaluate();
-	}
+    @Override
+    public int evaluate() {
+        return leftValue.getValue() + rightValue.getValue();
+    }
+
+    @Override
+    public String represent() {
+        return leftValue.getValue() + " + " + rightValue.getValue();
+    }
 }

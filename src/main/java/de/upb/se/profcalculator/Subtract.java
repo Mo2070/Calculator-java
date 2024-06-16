@@ -1,22 +1,18 @@
 package de.upb.se.profcalculator;
 
-public class Subtract {
-    public Value leftValue, rightValue;
-    
-    public Subtract(Value leftOperand, Value rightOperand) {
-        this.leftValue = leftOperand;
-        this.rightValue = rightOperand;
+public class Subtract extends Expression {
+
+    public Subtract(Value leftValue, Value rightValue) {
+        super(leftValue, rightValue);
     }
 
-    public String represent() {
-        return leftValue.toString() + " - " + rightValue.toString();
-    }
-
+    @Override
     public int evaluate() {
         return leftValue.getValue() - rightValue.getValue();
     }
-    
-    public String computeEquation() {
-        return represent() + " = " + evaluate();
+
+    @Override
+    public String represent() {
+        return leftValue.getValue() + " - " + rightValue.getValue();
     }
 }
