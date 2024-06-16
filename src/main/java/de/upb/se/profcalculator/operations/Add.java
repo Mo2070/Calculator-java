@@ -1,12 +1,20 @@
 package de.upb.se.profcalculator.operations;
 
+import de.upb.se.profcalculator.interfaces.Expression;
 import de.upb.se.profcalculator.main.Value;
-import de.upb.se.profcalculator.main.Expression;
 
 public class Add extends Expression {
+    private final Value leftValue;
+    private final Value rightValue;
 
     public Add(Value leftOperand, Value rightOperand) {
-        super(leftOperand, rightOperand);
+        this.leftValue = leftOperand;
+        this.rightValue = rightOperand;
+    }
+
+    @Override
+    public String computeEquation() {
+        return represent() + " = " + evaluate();
     }
 
     @Override
@@ -14,8 +22,7 @@ public class Add extends Expression {
         return leftValue.getValue() + rightValue.getValue();
     }
 
-    @Override
-    public String computeEquation() {
-        return represent("+") + " = " + evaluate();
+    public String represent() {
+        return leftValue.toString() + " + " + rightValue.toString();
     }
 }

@@ -1,25 +1,25 @@
 package de.upb.se.profcalculator.main;
 
+import de.upb.se.profcalculator.interfaces.Expression;
+import de.upb.se.profcalculator.operations.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import de.upb.se.profcalculator.operations.Add;
-import de.upb.se.profcalculator.operations.Subtract;
-import de.upb.se.profcalculator.operations.Multiply;
-import de.upb.se.profcalculator.operations.Divide;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
-public class ProfCalculator extends Application implements EventHandler<ActionEvent> {
+public class ProfCalculator extends Application {
 
     private Value currentValue;
     private StringBuilder currentEquation = new StringBuilder();
@@ -28,6 +28,9 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
     private Label memoryLabel = new Label("");
     private TextField inputField = new TextField("");
     private Label resultLabel = new Label("0");
+    private TextArea previousCalculationsArea = new TextArea();
+    private Set<String> uniqueCalculations = new LinkedHashSet<>();
+    private boolean isCalculationsVisible = false;
 
     private void resetCalculator() {
         currentValue = new Value();  // Use the default constructor to initialize with 0
@@ -37,10 +40,12 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         inputField.setText("");
         errorLabel.setText("");
         memoryLabel.setText("");
+        previousCalculationsArea.clear();
+        uniqueCalculations.clear();
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         stage.setTitle("Professional Calculator");
         errorLabel.setTextFill(Color.web("#AA0000"));
 
@@ -51,9 +56,13 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
                 createButton("*", "multiply"),
                 createButton("/", "divide"),
                 resultLabel, memoryLabel,
-                createButton("Reset", "reset"));
+                createButton("Reset", "reset"),
+                createButton("Print", "print"),
+                previousCalculationsArea);
         layout.setPadding(new Insets(20, 80, 20, 80));
         Scene scene = new Scene(layout);
+
+        previousCalculationsArea.setVisible(isCalculationsVisible);  // Initially hidden
 
         stage.setScene(scene);
         stage.show();
@@ -69,6 +78,9 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         if ("reset".equals(operation)) {
             resetCalculator();
             return;
+        } else if ("print".equals(operation)) {
+            toggleCalculationsVisibility();
+            return;
         }
 
         try {
@@ -77,28 +89,35 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
                 currentValue = newValue;
                 currentEquation.append(newValue.getValue());
             } else {
-                Expression expr = null;
+                Expression expression = null;
                 switch (operation) {
                     case "add":
-                        expr = new Add(currentValue, newValue);
+                        expression = new Add(currentValue, newValue);
                         break;
                     case "subtract":
-                        expr = new Subtract(currentValue, newValue);
+                        expression = new Subtract(currentValue, newValue);
                         break;
                     case "multiply":
-                        expr = new Multiply(currentValue, newValue);
+                        expression = new Multiply(currentValue, newValue);
                         break;
                     case "divide":
-                        expr = new Divide(currentValue, newValue);
+                        expression = new Divide(currentValue, newValue);
                         break;
                 }
-                if (expr != null) {
-                    updateEquationAndValue(expr);
+
+                if (expression != null) {
+                    String equation = expression.computeEquation();
+                    currentValue = new Value(expression.evaluate());
+                    currentEquation.append(" = ").append(currentValue.getValue());
+                    resultLabel.setText(currentEquation.toString());
+                    uniqueCalculations.add(equation);  // Add unique calculation
+                    updatePreviousCalculationsArea();  // Update the text area
+                    currentEquation.setLength(0);  // Clear current equation
+                    currentEquation.append(currentValue.getValue());
                 }
             }
             inputField.setText("");
             errorLabel.setText("");
-            inputField.requestFocus();
         } catch (NumberFormatException e) {
             errorLabel.setText("\"" + inputField.getText() + "\" is not a valid integer");
         } catch (ArithmeticException e) {
@@ -106,29 +125,23 @@ public class ProfCalculator extends Application implements EventHandler<ActionEv
         }
     }
 
-    private void updateEquationAndValue(Expression expr) {
-        currentEquation.append(" = ").append(expr.evaluate());
-        currentValue = new Value(expr.evaluate());
-        resultLabel.setText(expr.computeEquation());
-        currentEquation = new StringBuilder().append(currentValue.getValue());
-        updateResultMemory(currentValue);  // Update the result memory
+    private void toggleCalculationsVisibility() {
+        isCalculationsVisible = !isCalculationsVisible;
+        previousCalculationsArea.setVisible(isCalculationsVisible);
+        if (isCalculationsVisible) {
+            updatePreviousCalculationsArea();
+        }
     }
 
-    private void updateResultMemory(Value result) {
-        int lastIndex = resultMemory.lastIndexOf(result);
-        if (lastIndex == -1) {
-            memoryLabel.setText("New result");
-        } else {
-            memoryLabel.setText("Result occurred " + (resultMemory.size() - lastIndex) + " steps ago");
+    private void updatePreviousCalculationsArea() {
+        StringBuilder calculationsText = new StringBuilder();
+        for (String calculation : uniqueCalculations) {
+            calculationsText.append(calculation).append("\n");
         }
-        resultMemory.add(result);  // Add the new result to the memory
+        previousCalculationsArea.setText(calculationsText.toString());
     }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    @Override
-    public void handle(ActionEvent event) {
     }
 }

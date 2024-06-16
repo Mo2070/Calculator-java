@@ -1,12 +1,24 @@
 package de.upb.se.profcalculator.operations;
 
+import de.upb.se.profcalculator.interfaces.Expression;
 import de.upb.se.profcalculator.main.Value;
-import de.upb.se.profcalculator.main.Expression;
 
 public class Divide extends Expression {
+    private final Value leftValue;
+    private final Value rightValue;
 
     public Divide(Value leftOperand, Value rightOperand) {
-        super(leftOperand, rightOperand);
+        this.leftValue = leftOperand;
+        this.rightValue = rightOperand;
+    }
+
+    @Override
+    public String computeEquation() {
+        try {
+            return represent() + " = " + evaluate();
+        } catch (ArithmeticException e) {
+            return represent() + " = Error: " + e.getMessage();
+        }
     }
 
     @Override
@@ -17,12 +29,7 @@ public class Divide extends Expression {
         return leftValue.getValue() / rightValue.getValue();
     }
 
-    @Override
-    public String computeEquation() {
-        try {
-            return represent("/") + " = " + evaluate();
-        } catch (ArithmeticException e) {
-            return represent("/") + " = Error: " + e.getMessage();
-        }
+    public String represent() {
+        return leftValue.toString() + " / " + rightValue.toString();
     }
 }
