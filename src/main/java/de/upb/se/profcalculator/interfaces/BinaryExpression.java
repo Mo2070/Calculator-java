@@ -11,7 +11,7 @@ public abstract class BinaryExpression extends Expression {
         this.rightOperand = rightOperand;
     }
 
-    public abstract int evaluate();
+    public abstract Value evaluate();
 
     public String computeEquation() {
         return leftOperand.computeEquation() + " " + getOperator() + " " + rightOperand.computeEquation();

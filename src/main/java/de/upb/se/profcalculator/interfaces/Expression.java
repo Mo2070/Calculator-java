@@ -1,6 +1,8 @@
 package de.upb.se.profcalculator.interfaces;
 
+import de.upb.se.profcalculator.main.Value;
+
 public abstract class Expression {
-    public abstract int evaluate();
+    public abstract Value evaluate();
     public abstract String computeEquation();
 }

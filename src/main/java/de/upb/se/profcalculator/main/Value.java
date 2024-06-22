@@ -23,8 +23,8 @@ public class Value extends Expression {
     }
 
     @Override
-    public int evaluate() {
-        return value;
+    public Value evaluate() {
+        return this;
     }
 
     @Override

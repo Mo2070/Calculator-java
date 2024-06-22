@@ -19,7 +19,7 @@ public class ProfCalculator extends Application {
 
     private Expression currentValue;
     private StringBuilder currentEquation = new StringBuilder();
-    private List<Expression> resultMemory = new ArrayList<>();
+    private List<Value> resultMemory = new ArrayList<>();
     private Label errorLabel = new Label("");
     private Label memoryLabel = new Label("");
     private TextField inputField = new TextField("");
@@ -103,13 +103,14 @@ public class ProfCalculator extends Application {
 
                 if (expression != null) {
                     String equation = expression.computeEquation();
-                    currentValue = new Value(expression.evaluate());
-                    currentEquation.append(" = ").append(currentValue.evaluate());
+                    currentValue = expression.evaluate();
+                    Value resultValue = (Value) currentValue;
+                    currentEquation.append(" = ").append(resultValue.getValue());
                     resultLabel.setText(currentEquation.toString());
                     uniqueCalculations.add(equation);  // Add unique calculation
                     updatePreviousCalculationsArea();  // Update the text area
                     currentEquation.setLength(0);  // Clear current equation
-                    currentEquation.append(currentValue.evaluate());
+                    currentEquation.append(resultValue.getValue());
                 }
             }
             inputField.setText("");
