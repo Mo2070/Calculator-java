@@ -1,6 +1,8 @@
 package de.upb.se.profcalculator.main;
 
-public class Value {
+import de.upb.se.profcalculator.interfaces.Expression;
+
+public class Value extends Expression {
     Integer value;
 
     public Value() {
@@ -18,6 +20,16 @@ public class Value {
 
     public int getValue() {
         return value.intValue();
+    }
+
+    @Override
+    public int evaluate() {
+        return value;
+    }
+
+    @Override
+    public String computeEquation() {
+        return value.toString();
     }
 
     @Override

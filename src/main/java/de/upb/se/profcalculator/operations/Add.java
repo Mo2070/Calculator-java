@@ -1,28 +1,21 @@
 package de.upb.se.profcalculator.operations;
 
+import de.upb.se.profcalculator.interfaces.BinaryExpression;
 import de.upb.se.profcalculator.interfaces.Expression;
-import de.upb.se.profcalculator.main.Value;
 
-public class Add extends Expression {
-    private final Value leftValue;
-    private final Value rightValue;
+public class Add extends BinaryExpression {
 
-    public Add(Value leftOperand, Value rightOperand) {
-        this.leftValue = leftOperand;
-        this.rightValue = rightOperand;
-    }
-
-    @Override
-    public String computeEquation() {
-        return represent() + " = " + evaluate();
+    public Add(Expression leftOperand, Expression rightOperand) {
+        super(leftOperand, rightOperand);
     }
 
     @Override
     public int evaluate() {
-        return leftValue.getValue() + rightValue.getValue();
+        return leftOperand.evaluate() + rightOperand.evaluate();
     }
 
-    public String represent() {
-        return leftValue.toString() + " + " + rightValue.toString();
+    @Override
+    protected String getOperator() {
+        return "+";
     }
 }
