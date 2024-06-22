@@ -3,7 +3,7 @@ package de.upb.se.profcalculator.main;
 import de.upb.se.profcalculator.interfaces.Expression;
 
 public class Value extends Expression {
-    Integer value;
+    private Integer value;
 
     public Value() {
         this.value = 0;
@@ -18,13 +18,14 @@ public class Value extends Expression {
         return new Value(intValue);
     }
 
-    public int getValue() {
-        return value.intValue();
-    }
-
     @Override
     public Value evaluate() {
         return this;
+    }
+
+    @Override
+    public int getValue() {  // Override the getValue method
+        return value.intValue();
     }
 
     @Override

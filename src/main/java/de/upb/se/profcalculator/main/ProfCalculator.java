@@ -5,7 +5,10 @@ import de.upb.se.profcalculator.operations.*;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -17,7 +20,7 @@ import java.util.Set;
 
 public class ProfCalculator extends Application {
 
-    private Expression currentValue;
+    private Expression currentExpression;
     private StringBuilder currentEquation = new StringBuilder();
     private List<Value> resultMemory = new ArrayList<>();
     private Label errorLabel = new Label("");
@@ -29,14 +32,14 @@ public class ProfCalculator extends Application {
     private boolean isCalculationsVisible = false;
 
     private void resetCalculator() {
-        currentValue = new Value();  // Use the default constructor to initialize with 0
+        currentExpression = new Value();  // Use the default constructor to initialize with 0
         currentEquation.setLength(0);
         resultMemory.clear();  // Clear the result memory
         resultLabel.setText("0");
         inputField.setText("");
         errorLabel.setText("");
         memoryLabel.setText("");
-        previousCalculationsArea.clear();
+        previousCalculationsArea.setText("");  // Clear previous calculations
         uniqueCalculations.clear();
     }
 
@@ -80,37 +83,36 @@ public class ProfCalculator extends Application {
         }
 
         try {
-            Expression newValue = Value.parseValue(inputField.getText());
-            if (currentValue == null || currentEquation.length() == 0) {  
-                currentValue = newValue;
-                currentEquation.append(newValue.computeEquation());
+            Value newValue = Value.parseValue(inputField.getText());
+            if (currentExpression == null || currentEquation.length() == 0) {
+                currentExpression = newValue;
+                currentEquation.append(newValue.getValue());
             } else {
                 Expression expression = null;
                 switch (operation) {
                     case "add":
-                        expression = new Add(currentValue, newValue);
+                        expression = new Add(currentExpression, newValue);
                         break;
                     case "subtract":
-                        expression = new Subtract(currentValue, newValue);
+                        expression = new Subtract(currentExpression, newValue);
                         break;
                     case "multiply":
-                        expression = new Multiply(currentValue, newValue);
+                        expression = new Multiply(currentExpression, newValue);
                         break;
                     case "divide":
-                        expression = new Divide(currentValue, newValue);
+                        expression = new Divide(currentExpression, newValue);
                         break;
                 }
 
                 if (expression != null) {
                     String equation = expression.computeEquation();
-                    currentValue = expression.evaluate();
-                    Value resultValue = (Value) currentValue;
-                    currentEquation.append(" = ").append(resultValue.getValue());
-                    resultLabel.setText(currentEquation.toString());
-                    uniqueCalculations.add(equation);  // Add unique calculation
+                    currentExpression = expression.evaluate();
+                    currentEquation.insert(0, "(").append(" ").append(operation.equals("add") ? "+" : operation.equals("subtract") ? "-" : operation.equals("multiply") ? "*" : "/")
+                                   .append(" ").append(newValue.getValue()).append(")");
+                    String fullEquation = currentEquation + " = " + currentExpression.getValue();
+                    resultLabel.setText(fullEquation);
+                    uniqueCalculations.add(fullEquation);  // Add unique calculation with result
                     updatePreviousCalculationsArea();  // Update the text area
-                    currentEquation.setLength(0);  // Clear current equation
-                    currentEquation.append(resultValue.getValue());
                 }
             }
             inputField.setText("");
@@ -139,6 +141,7 @@ public class ProfCalculator extends Application {
     }
 
     public static void main(String[] args) {
+
         launch(args);
     }
 }
