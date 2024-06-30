@@ -1,0 +1,21 @@
+Aufgabe 4: 
+
+a) Warum kann der Rechner ohne Fehler gestartet werden, obwohl die verwendeten Methoden gelöscht wurden?
+
+Der Rechner kann ohne Fehler gestartet werden, weil die Methoden toString, equals und hashCode nicht essenziell für die Ausführung des Programms sind. Java stellt Standardimplementierungen dieser Methoden aus der Object-Klasse bereit.
+
+b) Welche Auswirkungen hat das Löschen der toString-Methode auf die Funktionsweise des Rechners?
+
+Wenn die toString-Methode gelöscht wird, wird die Standard-toString-Methode der Object-Klasse verwendet. Dies führt dazu, dass die Ausgabe den Klassennamen gefolgt von dem "@"-Zeichen und dem Hashcode des Objekts in hexadezimaler Form anzeigt, was die Anzeige weniger lesbar macht.
+
+c) Welche Auswirkungen hat das Löschen der Methoden equals und hashCode auf die Funktionsweise des Rechners?
+
+Das Löschen der Methoden equals und hashCode bedeutet, dass die Standardimplementierungen der Object-Klasse verwendet werden. Dies beeinträchtigt die Funktionalität des Ergebnisspeichers, da unterschiedliche Value-Objekte mit dem gleichen Integer-Wert nicht als gleich betrachtet werden, wodurch der Speicher sie als unterschiedliche Ergebnisse behandelt.
+
+d) Wie verhält sich der Rechner, wenn Sie eine equals-Methode implementieren, die immer true zurückgibt?
+
+Wenn die equals-Methode immer true zurückgibt, werden alle Value-Objekte als gleich betrachtet, unabhängig von ihren tatsächlichen Werten. Dies führt dazu, dass die Speicherfunktionalität fälschlicherweise angibt, dass das gleiche Ergebnis bereits zuvor aufgetreten ist, auch wenn dies nicht der Fall war.
+
+e) Was passiert, wenn Ihre toString-Methode null zurückgibt?
+
+Wenn die toString-Methode null zurückgibt, kann dies eine NullPointerException verursachen, wenn die Ergebniszeichenfolge im GUI konstruiert und angezeigt wird. Das resultLabel und alle anderen UI-Elemente, die versuchen, diese Zeichenfolge zu verwenden, würden das Ergebnis nicht korrekt anzeigen, was möglicherweise zum Absturz der Anwendung führt.
