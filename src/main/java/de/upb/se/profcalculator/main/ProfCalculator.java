@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ProfCalculator extends Application {
-
     private Expression currentExpression;
     private StringBuilder currentEquation = new StringBuilder();
     private List<Value> resultMemory = new ArrayList<>();
@@ -42,7 +41,7 @@ public class ProfCalculator extends Application {
         previousCalculationsArea.setText("");  
         //uniqueCalculations.clear();
         handleOperation("print");
-        handleOperation("print");
+        
     }
 
     @Override
