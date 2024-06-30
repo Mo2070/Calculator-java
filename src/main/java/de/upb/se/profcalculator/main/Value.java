@@ -1,5 +1,4 @@
 package de.upb.se.profcalculator.main;
-
 import de.upb.se.profcalculator.interfaces.Expression;
 
 public class Value extends Expression {
@@ -24,7 +23,7 @@ public class Value extends Expression {
     }
 
     @Override
-    public int getValue() {  // Override the getValue method
+    public int getValue() {  
         return value.intValue();
     }
 

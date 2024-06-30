@@ -32,15 +32,17 @@ public class ProfCalculator extends Application {
     private boolean isCalculationsVisible = false;
 
     private void resetCalculator() {
-        currentExpression = new Value();  // Use the default constructor to initialize with 0
+        currentExpression = new Value();  
         currentEquation.setLength(0);
-        resultMemory.clear();  // Clear the result memory
+        resultMemory.clear();  
         resultLabel.setText("0");
         inputField.setText("");
         errorLabel.setText("");
         memoryLabel.setText("");
-        previousCalculationsArea.setText("");  // Clear previous calculations
-        uniqueCalculations.clear();
+        previousCalculationsArea.setText("");  
+        //uniqueCalculations.clear();
+        handleOperation("print");
+        handleOperation("print");
     }
 
     @Override
@@ -61,7 +63,7 @@ public class ProfCalculator extends Application {
         layout.setPadding(new Insets(20, 80, 20, 80));
         Scene scene = new Scene(layout);
 
-        previousCalculationsArea.setVisible(isCalculationsVisible);  // Initially hidden
+        previousCalculationsArea.setVisible(isCalculationsVisible);  
 
         stage.setScene(scene);
         stage.show();
@@ -111,8 +113,8 @@ public class ProfCalculator extends Application {
                                    .append(" ").append(newValue.getValue()).append(")");
                     String fullEquation = currentEquation + " = " + currentExpression.getValue();
                     resultLabel.setText(fullEquation);
-                    uniqueCalculations.add(fullEquation);  // Add unique calculation with result
-                    updatePreviousCalculationsArea();  // Update the text area
+                    uniqueCalculations.add(fullEquation);  
+                    updatePreviousCalculationsArea();  
                 }
             }
             inputField.setText("");
@@ -141,7 +143,6 @@ public class ProfCalculator extends Application {
     }
 
     public static void main(String[] args) {
-
         launch(args);
     }
 }
