@@ -42,7 +42,7 @@ public class ProfCalculator extends Application {
         previousCalculationsArea.setText("");  
         //uniqueCalculations.clear();
         handleOperation("print");
-
+        handleOperation("print");
     }
 
     @Override
